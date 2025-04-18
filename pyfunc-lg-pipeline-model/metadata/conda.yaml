@@ -1,0 +1,10 @@
+channels:
+- conda-forge
+dependencies:
+- python=3.11.11
+- pip<=23.2.1
+- pip:
+  - mlflow==2.17.0
+  - pyspark==3.5.0
+  - ./code/iris-0.1.5-py3-none-any.whl
+name: mlflow-env
