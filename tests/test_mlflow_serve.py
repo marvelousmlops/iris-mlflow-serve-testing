@@ -10,10 +10,10 @@ from loguru import logger
 BASE_URL = "http://127.0.0.1:5088"
 
 test_data = {
-    "SepalLengthCm": 6.1,
-    "SepalWidthCm": 2.8,
-    "PetalLengthCm": 4.7,
-    "PetalWidthCm": 1.2,
+    "sepal length (cm)": 6.1,
+    "sepal width (cm)": 2.8,
+    "petal length (cm)": 4.7,
+    "petal width (cm)": 1.2,
 }
 
 pandas_df = pd.DataFrame([test_data])
