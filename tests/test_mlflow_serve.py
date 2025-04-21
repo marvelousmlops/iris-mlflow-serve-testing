@@ -18,13 +18,12 @@ test_data = {
 
 pandas_df = pd.DataFrame([test_data])
 
-payload_dataframe_split = json.dumps(
-    {"dataframe_split": pandas_df.to_dict(orient="split")}
-)
+payload_dataframe_split = json.dumps({"dataframe_split": pandas_df.to_dict(orient="split")})
+
 
 def test_inference_server_invocations() -> None:
-    """Test model invocations using split dataframe format. 
-       Verifies successful response and valid prediction format."""
+    """Test model invocations using split dataframe format.
+    Verifies successful response and valid prediction format."""
     response = requests.post(
         f"{BASE_URL}/invocations",
         data=payload_dataframe_split,
@@ -38,10 +37,7 @@ def test_inference_server_invocations() -> None:
     assert isinstance(value, list)
 
 
-
-def test_inference_server_invocations_with_dataframe_records_should_fail_when_contact_request_violation() -> (
-    None
-):
+def test_inference_server_invocations_with_dataframe_records_should_fail_when_contact_request_violation() -> None:
     """Test that inference server invocations with incomplete DataFrame records fail as expected.
 
     Drops each column from the DataFrame in turn and verifies that the server returns a 400 error.
@@ -49,9 +45,7 @@ def test_inference_server_invocations_with_dataframe_records_should_fail_when_co
     for col in pandas_df.columns.to_list():
         tmp_df = pandas_df.drop(columns=[col])
 
-        tmp_payload_dataframe_records = json.dumps(
-            {"dataframe_records": tmp_df.to_dict(orient="records")}
-        )
+        tmp_payload_dataframe_records = json.dumps({"dataframe_records": tmp_df.to_dict(orient="records")})
         logger.info(f"Testing with {col} dropped.")
         response = requests.post(
             f"{BASE_URL}/invocations",
@@ -59,15 +53,13 @@ def test_inference_server_invocations_with_dataframe_records_should_fail_when_co
             headers={"Content-Type": "application/json"},
             timeout=2,
         )
-        logger.info(
-            f"Received {response.status_code} with response of '{response.text}'."
-        )
+        logger.info(f"Received {response.status_code} with response of '{response.text}'.")
         assert response.status_code == 400
 
 
 def test_infererence_server_invocations_with_full_dataframe() -> None:
-    """Test model predictions with complete dataset. 
-       Validates response status and prediction class membership."""
+    """Test model predictions with complete dataset.
+    Validates response status and prediction class membership."""
     CUR_DIR = pathlib.Path(__file__).parent
     test_set = pd.read_csv(f"{CUR_DIR.as_posix()}/test_data/test_set.csv")
     input_data = test_set.drop(columns=["Id", "Species"])
@@ -87,4 +79,3 @@ def test_infererence_server_invocations_with_full_dataframe() -> None:
 
     predictions = response.json()["predictions"]
     assert all(isinstance(pred, str) for pred in predictions)  # Ensure all are strings
-

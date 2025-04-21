@@ -7,19 +7,20 @@
 
 # COMMAND ----------
 
+from typing import Union
+
+import mlflow
+import numpy as np
+import pandas as pd
+from loguru import logger
+from mlflow.models import infer_signature
 from sklearn import datasets
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-import mlflow
-from sklearn.model_selection import train_test_split
-from loguru import logger
-from mlflow.models import infer_signature
-import pandas as pd
-import numpy as np
-from typing import Union
 
 # COMMAND ----------
 
@@ -29,16 +30,19 @@ y = iris.target
 logger.info("The dataset is loaded.")
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=28)
-preprocessor = ColumnTransformer(
-                transformers=[("std_scaler", StandardScaler(), iris.feature_names)])
+preprocessor = ColumnTransformer(transformers=[("std_scaler", StandardScaler(), iris.feature_names)])
 
-pipeline = Pipeline(steps=[("preprocessor", preprocessor),  
-                           ("classifier", LogisticRegression()),
-                           ])
+pipeline = Pipeline(
+    steps=[
+        ("preprocessor", preprocessor),
+        ("classifier", LogisticRegression()),
+    ]
+)
 logger.info("🚀 Starting training...")
 pipeline.fit(X_train, y_train)
 
 # COMMAND ----------
+
 
 class ModelWrapper(mlflow.pyfunc.PythonModel):
     """A wrapper class for machine learning models to be used with MLflow.
@@ -65,6 +69,7 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
         mapped_predictions = [self.class_names[int(pred)] for pred in raw_predictions]
         return mapped_predictions
 
+
 # COMMAND ----------
 
 mlflow.autolog(disable=True)
@@ -76,7 +81,7 @@ with mlflow.start_run() as run:
     y_proba = pipeline.predict_proba(X_test)
 
     # Evaluation metrics
-    auc_test = roc_auc_score(y_test, y_proba, multi_class='ovr')
+    auc_test = roc_auc_score(y_test, y_proba, multi_class="ovr")
     logger.info(f"AUC Report: {auc_test}")
 
     # Log parameters and metrics
@@ -90,7 +95,7 @@ with mlflow.start_run() as run:
 
     mlflow.pyfunc.log_model(
         python_model=ModelWrapper(pipeline),
-        artifact_path=f"pyfunc-lg-pipeline-model",
+        artifact_path="pyfunc-lg-pipeline-model",
         signature=signature,
     )
 

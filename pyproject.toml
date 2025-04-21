@@ -9,6 +9,7 @@ dependencies = [
     "virtualenv>=20.30.0",
     "pandas==2.2.3",
     "scikit-learn==1.5.2",
+    "pre-commit>=4.2.0",
 ]
 
 [project.optional-dependencies]
@@ -18,7 +19,8 @@ test = [
     "pytest>=8.3.5",
     "requests>=2.32.3",
     "pip>=25.0.1",
-    "ipykernel>=6.29.5, <7"
+    "ipykernel>=6.29.5, <7",
+    "pre-commit==4.2.0",
 ]
 
 [tool.pytest.ini_options]
@@ -39,7 +41,6 @@ select = [
     "SIM",  # flake8-simplify rules
     "ERA",  # eradicate rules
     "C",    # pylint convention rules
-    "ANN"   # flake8-annotations rules
 ]
 ignore = [
     "D107", # Missing docstring in `__init__`

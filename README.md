@@ -13,17 +13,17 @@ This approach is ideal for lightweight applications or for testing your model lo
 - MLflow model artifact (`pyfunc-lg-pipeline-model` directory)
 
 ### Setup & Execution
-1. **Install dependencies**  
+1. **Install dependencies**
    ```
    uv sync --all-extras
    ```
 
-2. **Launch MLflow Server**  
+2. **Launch MLflow Server**
    ```
    uv run mlflow models serve -m pyfunc-lg-pipeline-model --port 5088
    ```
 
-3. **Run Test Suite** (in new terminal)  
+3. **Run Test Suite** (in new terminal)
    ```
    uv run pytest tests/
    ```
@@ -55,11 +55,11 @@ This approach is ideal for lightweight applications or for testing your model lo
 | `/invocations` | POST | Valid prediction JSON |
 
 ### Test Types
-1. **Single Prediction**  
+1. **Single Prediction**
    - Validates response structure
    - Tests both DataFrame serialization formats
 
-2. **Batch Validation**  
+2. **Batch Validation**
    - Processes full CSV dataset
    - Verifies class membership for all predictions
 
@@ -100,6 +100,3 @@ requests>=2.32.3
 - **Port Conflicts**: Ensure port 5088 is available
 - **Model Path**: Verify `pyfunc-lg-pipeline-model` directory exists
 - **Dependency Issues**: Use `uv sync --all-extras` for clean installs
-
-
-
