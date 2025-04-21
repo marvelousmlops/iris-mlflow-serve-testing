@@ -6,6 +6,12 @@ A comprehensive testing suite for validating MLflow model serving endpoints (`ml
 
 This approach is ideal for lightweight applications or for testing your model locally before moving it to a staging or production environment.
 
+## Authors
+
+- **Mehmet Acikgoz** 
+- **Maria Vechtomova** 
+
+
 ## 🚀 Quick Start
 
 ### Prerequisites
