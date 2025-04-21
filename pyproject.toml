@@ -10,11 +10,11 @@ dependencies = [
     "pandas==2.2.3",
     "scikit-learn==1.5.2",
     "pre-commit>=4.2.0",
+    "loguru>=0.7.3",
 ]
 
 [project.optional-dependencies]
 test = [
-    "loguru>=0.7.3",
     "pandas>=2.2.3",
     "pytest>=8.3.5",
     "requests>=2.32.3",
