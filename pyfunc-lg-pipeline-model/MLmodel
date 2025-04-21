@@ -1,25 +1,24 @@
 artifact_path: pyfunc-lg-pipeline-model
-databricks_runtime: '15.4'
 flavors:
   python_function:
-    cloudpickle_version: 2.2.1
-    code: code
+    cloudpickle_version: 3.1.1
+    code: null
     env:
       conda: conda.yaml
       virtualenv: python_env.yaml
     loader_module: mlflow.pyfunc.model
     python_model: python_model.pkl
-    python_version: 3.11.11
+    python_version: 3.11.9
     streamable: false
 mlflow_version: 2.17.0
-model_size_bytes: 2233
-model_uuid: 7c409c7fa1b9426bbd85cdba7e43ec4a
-run_id: 507ee9f7b02a4970b4c09240566ab329
+model_size_bytes: 20289
+model_uuid: 44b7052e446e459283f24f852af50abf
+run_id: 60e7bb5190a54f8c8b17e52c0c320b10
 signature:
-  inputs: '[{"type": "double", "name": "SepalLengthCm", "required": true}, {"type":
-    "double", "name": "SepalWidthCm", "required": true}, {"type": "double", "name":
-    "PetalLengthCm", "required": true}, {"type": "double", "name": "PetalWidthCm",
-    "required": true}]'
-  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  inputs: '[{"type": "double", "name": "sepal length (cm)", "required": true}, {"type":
+    "double", "name": "sepal width (cm)", "required": true}, {"type": "double", "name":
+    "petal length (cm)", "required": true}, {"type": "double", "name": "petal width
+    (cm)", "required": true}]'
+  outputs: '[{"type": "string", "required": true}]'
   params: null
-utc_time_created: '2025-04-18 14:13:55.204890'
+utc_time_created: '2025-04-21 12:57:20.528087'

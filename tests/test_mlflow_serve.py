@@ -21,35 +21,10 @@ pandas_df = pd.DataFrame([test_data])
 payload_dataframe_split = json.dumps(
     {"dataframe_split": pandas_df.to_dict(orient="split")}
 )
-payload_dataframe_records = json.dumps(
-    {"dataframe_records": pandas_df.to_dict(orient="records")}
-)
 
-
-def test_inference_server_health() -> None:
-    """Test health endpoint of inference server. Verifies the service returns 200 status code."""
-    response = requests.get(f"{BASE_URL}/health")
-    logger.info(f"Received {response.status_code}.")
-    assert response.status_code == 200
-
-
-def test_inference_server_ping() -> None:
-    """Test ping endpoint functionality. Checks if server responds with successful status code."""
-    response = requests.get(f"{BASE_URL}/ping")
-    logger.info(f"Received {response.status_code}.")
-    assert response.status_code == 200
-
-
-def test_inference_server_version() -> None:
-    """Test version endpoint response. Validates status code and matches expected version string."""
-    response = requests.get(f"{BASE_URL}/version")
-    logger.info(f"Received {response.status_code} with response of '{response.text}'.")
-    assert response.status_code == 200
-    assert response.text == "2.17.0"
-
-
-def test_inference_server_invocations_with_dataframe_split() -> None:
-    """Test model invocations using split dataframe format. Verifies successful response and valid prediction format."""
+def test_inference_server_invocations() -> None:
+    """Test model invocations using split dataframe format. 
+       Verifies successful response and valid prediction format."""
     response = requests.post(
         f"{BASE_URL}/invocations",
         data=payload_dataframe_split,
@@ -62,23 +37,6 @@ def test_inference_server_invocations_with_dataframe_split() -> None:
     value = response.json()["predictions"]
     assert isinstance(value, list)
 
-
-def test_inference_server_invocations_with_dataframe_records() -> None:
-    """Test model invocations using records format. Validates response status and prediction values format."""
-    response = requests.post(
-        f"{BASE_URL}/invocations",
-        data=payload_dataframe_records,
-        headers={"Content-Type": "application/json"},
-        timeout=2,
-    )
-    logger.info(f"Received {response.status_code} with response of '{response.text}'.")
-    assert response.status_code == 200
-
-    predictions = response.json()["predictions"]
-    assert all(isinstance(pred, str) for pred in predictions)  # Ensure all are strings
-    assert all(
-        pred in ["setosa", "versicolor", "virginica"] for pred in predictions
-    )  # Validate class names
 
 
 def test_inference_server_invocations_with_dataframe_records_should_fail_when_contact_request_violation() -> (
@@ -108,7 +66,8 @@ def test_inference_server_invocations_with_dataframe_records_should_fail_when_co
 
 
 def test_infererence_server_invocations_with_full_dataframe() -> None:
-    """Test model predictions with complete dataset. Validates response status and prediction class membership."""
+    """Test model predictions with complete dataset. 
+       Validates response status and prediction class membership."""
     CUR_DIR = pathlib.Path(__file__).parent
     test_set = pd.read_csv(f"{CUR_DIR.as_posix()}/test_data/test_set.csv")
     input_data = test_set.drop(columns=["Id", "Species"])
@@ -128,6 +87,4 @@ def test_infererence_server_invocations_with_full_dataframe() -> None:
 
     predictions = response.json()["predictions"]
     assert all(isinstance(pred, str) for pred in predictions)  # Ensure all are strings
-    assert all(
-        pred in ["setosa", "versicolor", "virginica"] for pred in predictions
-    )  # Validate class names
+

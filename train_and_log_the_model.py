@@ -7,7 +7,7 @@
 
 # COMMAND ----------
 
-import sklearn
+from sklearn import datasets
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
@@ -23,7 +23,7 @@ from typing import Union
 
 # COMMAND ----------
 
-iris = sklearn.datasets.load_iris(as_frame=True)
+iris = datasets.load_iris(as_frame=True)
 X = iris.data
 y = iris.target
 logger.info("The dataset is loaded.")
@@ -62,12 +62,13 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
         :return: redictions mapped to class names in original input format.
         """
         raw_predictions = self.model.predict(model_input)
-        mapped_predictions = [self.class_names[int(pred)] for pred in raw_predictions][0]
-        return {"Iris species": mapped_predictions}
+        mapped_predictions = [self.class_names[int(pred)] for pred in raw_predictions]
+        return mapped_predictions
 
 # COMMAND ----------
 
 mlflow.autolog(disable=True)
+mlflow.set_tracking_uri("databricks://dbc-c2e8445d-159d")
 mlflow.set_experiment("/Shared/iris-demo")
 
 with mlflow.start_run() as run:
@@ -83,7 +84,7 @@ with mlflow.start_run() as run:
     mlflow.log_metric("auc", auc_test)
 
     # Log the model
-    signature = infer_signature(model_input=X_train, model_output={"Iris species": "setosa"})
+    signature = infer_signature(model_input=X_train, model_output=["setosa"])
     dataset = mlflow.data.from_pandas(iris.frame, name="train_set")
     mlflow.log_input(dataset, context="training")
 
@@ -93,3 +94,4 @@ with mlflow.start_run() as run:
         signature=signature,
     )
 
+# COMMAND ----------
